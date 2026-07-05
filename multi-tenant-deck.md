@@ -21,3 +21,7 @@ Notes:
   give identical crc appids across profiles (fine — grids are per-account dirs).
 - Same pattern extends to Chromium (`--user-data-dir`), Kodi (built-in profiles
   or `KODI_DATA`), Prism (has native multi-account).
+- The heavyweight alternative — one Linux user per person with their own Gaming
+  Mode session — is viable on current builds; internals in
+  [session-switching.md](session-switching.md), design work in the private
+  `steamos-multiuser` repo.
