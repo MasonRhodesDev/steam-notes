@@ -12,3 +12,4 @@ the multi-tenant family Deck (July 2026). Each note is self-contained.
 - [multi-tenant-deck.md](multi-tenant-deck.md) — per-Steam-account app profiles on a shared single-user device
 - [steamos-persistence.md](steamos-persistence.md) — what survives SteamOS updates (incl. the `/etc` keep-list) and where to install things
 - [session-switching.md](session-switching.md) — how Gaming↔Desktop switching works on steamos-manager builds (SDDM autologin drop-ins)
+- [remote-play-host.md](remote-play-host.md): host-side Remote Play behaviour (Big Picture on connect, capture method cost, why the log has no heartbeat)
