@@ -53,21 +53,54 @@ because nothing in this log is periodic.**
 - `CLIENT: Video rect:` and `CLIENT: Texture rect:` fire roughly once every two
   minutes, far too sparse for a short freshness window.
 
-The reliable signal is the boundary pair:
+The reliable signal is the **session** boundary pair:
 
 ```
->>> Starting desktop stream
+Streaming started to <client> ...
+PipeWire: Deinitializing streaming
+```
+
+Across one log these paired 1:1 with client connections (7 and 7). Scan
+backwards for the most recent of the two and whichever came last **is** the
+current state. No freshness window, no timestamp parsing, and it stays correct
+through a session of any length.
+
+Do **not** use `>>> Starting desktop stream` / `>>> Stopped desktop stream`
+for this, tempting as the names are. Those are per capture **source**, and
+Steam logs `Stopped desktop stream` when it switches from desktop capture to
+the game overlay as a title launches:
+
+```
 >>> Stopped desktop stream
+>>> Switching video stream from Desktop_MovieStream to GameOverlay_MovieStream_<id>
+>>> Capture method set to Game Vulkan NV12 + VAAPI H264
 ```
 
-Across six sessions in one log these were perfectly paired and strictly
-alternating. So scan backwards for the most recent of the two and whichever
-came last **is** the current state. No freshness window, no timestamp parsing,
-and it stays correct through a session of any length.
+The session is very much alive at that point, and no `Deinitializing` fires.
+In the same log the source pair counted 9 and 9 against 7 sessions. Treating it
+as a session boundary made "is a stream live" flip false the instant a game
+started, which released a monitor override mid-stream.
 
-Both lines say "desktop" even when the activity is a game
-(`k_EStreamActivityGame`), so there is no separate game-stream variant to
-match.
+## The log rotates at about 1MB, mid-session if that is when it fills
+
+`streaming_log.txt` is moved to `streaming_log.previous.txt` once it reaches
+roughly 1MB (a rotated copy measured 1,048,509 bytes), and the new file starts
+empty. It does not wait for the session to end: one rotation landed eight
+minutes into a live session, leaving that session's `Streaming started to`
+line in the rotated file and nothing at all in the current one.
+
+Two consequences for anything reading this log:
+
+- A scan of the current file alone reads "no session" straight after a
+  rotation, even with a stream running. Fall through to the `.previous.txt`
+  file when the current one has no boundary.
+- Scan whole files, not a tail. A session start can sit under more than
+  half a megabyte of per-frame chatter in a long or struggling session, so a
+  512KB tail window missed it. Since Steam caps each file at about 1MB, a
+  full-file scan is bounded by that cap anyway.
+
+At `Unlimited` bitrate the `dynamicbitrate` lines alone can fill a megabyte in
+minutes, so rotation is a normal event during a long stream, not a rare one.
 
 ## The capture method decides how much the stream costs the host
 
