@@ -16,6 +16,16 @@ stream starting.
 This matters if the host has any automation keyed to Big Picture, because a
 remote connection will trigger it even though nobody touched the machine.
 
+The window does not reliably go away when the client disconnects. In one
+session it lingered for minutes after `PipeWire: Deinitializing streaming`,
+with the host sitting in Big Picture that nobody at the desk had opened; in
+the next it was gone within five seconds of the same marker. Automation that
+restores the desk on session end should not assume either. What worked: wait
+a short grace after the end marker, then close the window through the
+compositor if it is still there, and only restore once it is confirmed gone.
+Closing it exits Big Picture to the desktop Steam window; it does not quit
+Steam.
+
 Not yet confirmed for the other path: a client that launches a specific title
 may go straight to the game without raising Big Picture. The behaviour above
 was observed only for `Game: UNKNOWN (0)` plus `>>> Starting desktop stream`,
