@@ -23,8 +23,9 @@ the next it was gone within five seconds of the same marker. Automation that
 restores the desk on session end should not assume either. What worked: wait
 a short grace after the end marker, then close the window through the
 compositor if it is still there, and only restore once it is confirmed gone.
-Closing it exits Big Picture to the desktop Steam window; it does not quit
-Steam.
+Whether a compositor close request exits Big Picture to the desktop window
+or quits Steam outright is not yet observed; the session that tested this
+path saw the window leave on its own before the close was sent.
 
 Not yet confirmed for the other path: a client that launches a specific title
 may go straight to the game without raising Big Picture. The behaviour above
