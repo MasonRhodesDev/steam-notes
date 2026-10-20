@@ -13,3 +13,4 @@ the multi-tenant family Deck (July 2026). Each note is self-contained.
 - [steamos-persistence.md](steamos-persistence.md) — what survives SteamOS updates (incl. the `/etc` keep-list) and where to install things
 - [session-switching.md](session-switching.md) — how Gaming↔Desktop switching works on steamos-manager builds (SDDM autologin drop-ins)
 - [remote-play-host.md](remote-play-host.md): host-side Remote Play behaviour (Big Picture on connect, capture method cost, why the log has no heartbeat)
+- [remote-play-discovery.md](remote-play-discovery.md): LAN discovery format, Steam Link's wake-on-LAN and why a Deck can't wake a host, the `client_id` clone trap
